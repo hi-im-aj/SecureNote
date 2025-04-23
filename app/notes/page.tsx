@@ -65,6 +65,24 @@ export default function page() {
     setNote(initialNote);
   };
 
+  const handleShareNote = async (id: number) => {
+    const { data, error } = await supabase
+      .from("notes")
+      .update({ is_public: true })
+      .eq("id", id)
+      .select("id, is_public, title, text, created_at")
+      .single();
+    if (error) {
+      console.error(`Error updating note with ID ${id}:`, error);
+      alert("Failed to update note.");
+      return;
+    }
+    if (data.is_public) {
+      setPrivateNotes((prev) => (prev ? prev.filter((n) => n.id !== id) : null));
+      setPublicNotes((prev) => (prev ? [data, ...prev] : [data]));
+    }
+  };
+
   return user ? (
     <div>
       <div className="flex-1 w-full flex flex-col gap-12 my-8">
@@ -97,13 +115,16 @@ export default function page() {
             privateNotes.map((e) => {
               return (
                 <Box key={e.id}>
-                  <Card size="2">
+                  <Card size="2" className="flex-1 w-full flex">
                     <Text as="p" size="5">
                       {e.title}
                     </Text>
                     <Text as="p" size="3">
                       {e.text}
                     </Text>
+                    <Button className="mt-2" onClick={() => handleShareNote(e.id)}>
+                      Share
+                    </Button>
                   </Card>
                 </Box>
               );
