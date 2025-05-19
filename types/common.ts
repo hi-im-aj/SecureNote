@@ -1,7 +1,13 @@
+interface User {
+  id: number;
+}
+
 interface Note {
   id: number;
-  title: string | null;
-  text: string | null;
+  user_id: number;
+  title: string;
+  text: string;
   created_at: string;
-  is_public: boolean;
+  is_public: number;
+  username: string;
 }
