@@ -1,4 +1,4 @@
-FROM node:22-alpine AS builder
+FROM node:23-alpine AS builder
 
 WORKDIR /app
 
@@ -8,14 +8,9 @@ RUN yarn install --frozen-lockfile
 
 COPY . .
 
-ARG NEXT_PUBLIC_SUPABASE_URL
-ARG NEXT_PUBLIC_SUPABASE_ANON_KEY
-ENV NEXT_PUBLIC_SUPABASE_URL=$NEXT_PUBLIC_SUPABASE_URL
-ENV NEXT_PUBLIC_SUPABASE_ANON_KEY=$NEXT_PUBLIC_SUPABASE_ANON_KEY
-
 RUN yarn build
 
-FROM node:22-alpine
+FROM node:23-alpine
 
 WORKDIR /app
 
